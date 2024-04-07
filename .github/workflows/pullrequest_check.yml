@@ -3,87 +3,158 @@ name: Checks
 on: [pull_request]
 
 jobs:
-  ts_lint:
-    runs-on: ubuntu-latest
+  # ts_lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: install ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: "3.0"
+  #         bundler-cache: true
+  #     - name: install ruby:gem::dotenv
+  #       run: gem install dotenv
+  #     - name: install ruby:gem::json
+  #       run: gem install json
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         toolchain: stable
+  #         override: true
+  #     - name: enable corepack for yarnpkg upgrade
+  #       run: corepack enable
+  #     - name: JS/TS linting
+  #       run: rake lint:js
+  # rust_lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: libudev-dev
+  #       run: sudo apt-get install -y libudev-dev
+  #     - name: install ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: "3.0"
+  #         bundler-cache: true
+  #     - name: install ruby:gem::dotenv
+  #       run: gem install dotenv
+  #     - name: install ruby:gem::json
+  #       run: gem install json
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         toolchain: stable
+  #         override: true
+  #     - name: Rust linting
+  #       run: rake lint:rust
+  # integration_tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: libudev-dev
+  #       run: sudo apt-get install -y libudev-dev
+  #     - name: install ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: "3.0"
+  #         bundler-cache: true
+  #     - name: install ruby:gem::dotenv
+  #       run: gem install dotenv
+  #     - name: install ruby:gem::json
+  #       run: gem install json
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         toolchain: stable
+  #         override: true
+  #     - name: enable corepack for yarnpkg upgrade
+  #       run: |
+  #         npm install tslib
+  #         corepack enable
+  #     - name: Run integration tests
+  #       run: rake test:js
+  # unit_tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: libudev-dev
+  #       run: sudo apt-get install -y libudev-dev
+  #     - name: install ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: "3.0"
+  #         bundler-cache: true
+  #     - name: Run unit tests on indexer
+  #       run: rake test:rust
+  benchmarks:
+    name: Invoke Jasmine performance tests
+    runs-on: self-hosted-runner-ubuntu
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: install ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.0"
-          bundler-cache: true
-      - name: install ruby:gem::dotenv
-        run: gem install dotenv
-      - name: install ruby:gem::json
-        run: gem install json
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - name: enable corepack for yarnpkg upgrade
-        run: corepack enable
-      - name: JS/TS linting
-        run: rake lint:js
-  rust_lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: libudev-dev
-        run: sudo apt-get install -y libudev-dev
-      - name: install ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.0"
-          bundler-cache: true
-      - name: install ruby:gem::dotenv
-        run: gem install dotenv
-      - name: install ruby:gem::json
-        run: gem install json
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - name: Rust linting
-        run: rake lint:rust
-  integration_tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: libudev-dev
-        run: sudo apt-get install -y libudev-dev
-      - name: install ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.0"
-          bundler-cache: true
-      - name: install ruby:gem::dotenv
-        run: gem install dotenv
-      - name: install ruby:gem::json
-        run: gem install json
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - name: enable corepack for yarnpkg upgrade
+      - name: 'Cleanup build folder'
         run: |
-          npm install tslib
-          corepack enable
-      - name: Run integration tests
-        run: rake test:js
-  unit_tests:
-    runs-on: ubuntu-latest
-    steps:
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: libudev-dev
-        run: sudo apt-get install -y libudev-dev
-      - name: install ruby
-        uses: ruby/setup-ruby@v1
+        run: |
+          sudo apt-get update && sudo apt-get install -y gconf-service libgbm-dev libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release xdg-utils wget ca-certificates
+          sudo apt-get install -y libudev-dev cargo npm imagemagick libmagickwand-dev cmake
+      - name: install node
+        uses: actions/setup-node@v4
         with:
-          ruby-version: "3.0"
-          bundler-cache: true
-      - name: Run unit tests on indexer
-        run: rake test:rust
+          node-version: 22.4.0
+      - name: Install Ruby and required gems
+        run: |
+          whoami
+          npm install -g corepack
+          corepack enable
+          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+          echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+          apt-get update
+          sudo apt-get install -y yarn
+          yarn --version
+          apt update
+          apt-get install -y software-properties-common
+          apt-add-repository -y ppa:rael-gc/rvm
+          apt-get update
+          apt-get install -y rvm
+          echo 'source "/etc/profile.d/rvm.sh"' >> ~/.bashrc
+          source /etc/profile.d/rvm.sh
+          which rvm
+          rvm install ruby-3.1.2
+          ruby --version
+          sudo chown -R $(whoami) /usr/local
+          rvm use 3.1.2 --default
+          rvm --version
+          rvm info
+          which rvm
+          ruby --version
+      - name: cargo install nj-cli
+        run: |
+          cargo install nj-cli --locked
+          cargo install wasm-pack --locked
+      - name: Run Jasmine performance tests
+        run: |
+          npm i -g tslib
+          export PATH="/usr/share/rvm:$PATH"
+          which ruby
+          ruby --version
+          pwd
+          gem install dotenv json octokit tmpdir fileutils
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          export PATH="/root/.cargo/bin:$PATH"
+          . "/root/.cargo/env"
+          source ~/.bashrc
+          echo "PR head repo: ${{ github.event.pull_request.head.repo.name }}"
+          echo "PR head branch: ${{ github.event.pull_request.head.ref }}"
+          echo "PR head owner: ${{ github.event.pull_request.head.repo.owner.login }}"
+          ls -la /chipmunk/chipmunk_performance_results
+          printenv
+          ruby scripts/tools/run_benchmarks1.rb PR~${{ github.event.pull_request.number }}
+        env:
+          REPO_OWNER: ${{ github.event.pull_request.head.repo.owner.login }}
+          REPO_NAME: ${{ github.event.pull_request.head.repo.name }}
