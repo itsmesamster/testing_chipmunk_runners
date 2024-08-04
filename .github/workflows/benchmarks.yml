@@ -96,7 +96,7 @@ jobs:
         run: |
           echo "PR head owner: ${{ github.event.pull_request_target.head.repo.owner }}"
           ls -la /chipmunk/chipmunk_performance_results
-          echo "PR head owner is : ${{ github.event_name }}"
+          echo "PR head owner is"
   push_data_to_chipmunk_docs:
     name: Move benchmark data to chipmunk-docs repository
     needs: invoke_jasmine_tests
