@@ -94,7 +94,7 @@ jobs:
       #     REPO_NAME: ${{ github.event.pull_request.head.repo.name }}
       - name: List files in the results folder
         run: |
-          echo "PR head owner: ${{ github.event.pull_request_target.head.repo.owner.login }}"
+          echo "PR head owner: ${{ github.event.pull_request.head.repo.owner.login }}"
           ls -la /chipmunk/chipmunk_performance_results
   push_data_to_chipmunk_docs:
     name: Move benchmark data to chipmunk-docs repository
@@ -119,15 +119,15 @@ jobs:
           git add ./jekyll/benchmarks/data/data.json
           git commit -m "Updating data.json for latest tag"
           git push origin master
-      - name: Push PRs data to chipmunk-docs
+      - name: Push PR data to chipmunk-docs
         working-directory: ./chipmunk-docs
-        if: github.event_name == 'pull_request_target' && github.event.pull_request_target.head.repo.owner.login == 'itsmesamster'
+        if: github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.owner.login == 'itsmesamster'
         run: |
           ls -la
-          cp /chipmunk/chipmunk_performance_results/Benchmark_PR_${{ github.event.pull_request_target.number }}.json ./jekyll/benchmarks/data/pull_request_target/Benchmark_PR_${{ github.event.pull_request_target.number }}.json
+          cp /chipmunk/chipmunk_performance_results/Benchmark_PR_${{ github.event.pull_request.number }}.json ./jekyll/benchmarks/data/pull_request/Benchmark_PR_${{ github.event.pull_request.number }}.json
           git config user.name "esrlabs"
           git config user.email "esrlabs@gmail.com"
           git remote set-url origin "https://esrlabs:${{secrets.DOCS_PUSH_TOKEN}}@github.com/esrlabs/chipmunk-docs"
-          git add ./jekyll/benchmarks/data/pull_request_target/Benchmark_PR_${{ github.event.pull_request_target.number }}.json
-          git commit -m "Adding PR benchmark results for chipmunk PR # ${{ github.event.pull_request_target.number }}"
+          git add ./jekyll/benchmarks/data/pull_request/Benchmark_PR_${{ github.event.pull_request.number }}.json
+          git commit -m "Adding PR benchmark results for chipmunk PR # ${{ github.event.pull_request.number }}"
           git push origin master
