@@ -119,7 +119,7 @@ jobs:
           git add ./jekyll/benchmarks/data/data.json
           git commit -m "Updating data.json for latest tag"
           git push origin master
-      - name: Push PR data to chipmunk-docs
+      - name: Push PRs data to chipmunk-docs
         working-directory: ./chipmunk-docs
         if: github.event_name == 'pull_request_target' && github.event.pull_request_target.head.repo.owner.login == 'itsmesamster'
         run: |
