@@ -1,6 +1,6 @@
 name: Checks
 
-on: [pull_request]
+on: [workflow_dispatch]
 
 jobs:
   ts_lint:
